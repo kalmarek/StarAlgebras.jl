@@ -28,16 +28,13 @@ supp_ind(a::AlgebraElement{A,T,<:SparseVector}) where {A,T} =
 supp(a::AlgebraElement) = (b = basis(parent(a)); [b[i] for i in supp_ind(a)])
 
 function star(X::AlgebraElement)
-    A = parent(X)
-    b = basis(A)
-    supp_X = supp_ind(X)
-    idcs = similar(supp_X)
-    vals = similar(idcs, eltype(X))
-    for (i, idx) in enumerate(supp_X)
-        idcs[i] = b[star(b[idx])]
-        vals[i] = X[idx]
+    b = basis(parent(X))
+    res = zero(X)
+    for idx in supp_ind(X)
+        a = b[idx]
+        res[star(a)] = X[a]
     end
-    return AlgebraElement(sparsevec(idcs, vals, length(b)), A)
+    return res
 end
 
 LinearAlgebra.norm(a::AlgebraElement, p::Real) = LinearAlgebra.norm(coeffs(a), p)
