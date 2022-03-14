@@ -16,4 +16,6 @@ include("algebra_elts.jl")
 include("arithmetic.jl")
 include("show.jl")
 
+include("matrix_hacks.jl")
+
 end
