@@ -19,15 +19,14 @@ end
 function Base.show(io::IO, a::AlgebraElement)
     A = parent(a)
     if iszero(a)
-        T = eltype(a)
         if hasbasis(A)
-            _coeff_elt_print(io, zero(T), first(basis(A)))
+            _coeff_elt_print(io, zero(a._elt), first(basis(A)))
         else
-            print(io, zero(T))
+            print(io, zero(a._elt))
         end
     elseif hasbasis(A)
         elts = String[]
-        nzeros = findall(!iszero, coeffs(a))
+        nzeros = supp_ind(a)
         for (counter, idx) in enumerate(nzeros)
             c, elt = coeffs(a)[idx], basis(A)[idx]
             if counter == 1
