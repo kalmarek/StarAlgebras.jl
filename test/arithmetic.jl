@@ -1,4 +1,5 @@
 using GroupsCore
+using PermutationGroups
 import Random
 
 include(joinpath(pathof(GroupsCore), "..", "..", "test", "cyclic.jl"))
@@ -105,37 +106,35 @@ StarAlgebras.star(g::GroupElement) = inv(g)
         @test supp(RG(1) + RG(g)) == [one(G), g]
         @test supp(a) == [one(G), g, h]
 
-        if false
-            @testset "Projections in Symm(3)" begin
-                G = SymmetricGroup(3)
-                b = StarAlgebras.Basis{UInt8}(collect(G))
-                l = length(b)
+        @testset "Projections in Symm(3)" begin
+            G = PermutationGroups.SymmetricGroup(3)
+            b = StarAlgebras.Basis{UInt8}(collect(G))
+            l = length(b)
 
-                RG = StarAlgebra(G, b)
-                @test RG isa StarAlgebra
+            RG = StarAlgebra(G, b)
+            @test RG isa StarAlgebra
 
-                P = sum(RG(g) for g in b) // l
-                @test P * P == P
+            P = sum(RG(g) for g in b) // l
+            @test P * P == P
 
-                P3 = 2 * sum(RG(g) for g in b if sign(g) > 0) // l
-                @test P3 * P3 == P3
+            P3 = 2 * sum(RG(g) for g in b if sign(g) > 0) // l
+            @test P3 * P3 == P3
 
-                PAlt = sum(sign(g) * RG(g) for g in b) // l
-                @test PAlt * PAlt == PAlt
+            PAlt = sum(sign(g) * RG(g) for g in b) // l
+            @test PAlt * PAlt == PAlt
 
-                @test P3 * PAlt == PAlt * P3
+            @test P3 * PAlt == PAlt * P3
 
-                P2 = (RG(1) + RG(b[2])) // 2
-                @test P2 * P2 == P2
+            P2 = (RG(1) + RG(b[2])) // 2
+            @test P2 * P2 == P2
 
-                @test P2 * P3 == P3 * P2 == P
+            @test P2 * P3 == P3 * P2 == P
 
-                P2m = (RG(1) - RG(b[2])) // 2
-                @test P2m * P2m == P2m
+            P2m = (RG(1) - RG(b[2])) // 2
+            @test P2m * P2m == P2m
 
-                @test P2m * P3 == P3 * P2m == PAlt
-                @test iszero(P2m * P2)
-            end
+            @test P2m * P3 == P3 * P2m == PAlt
+            @test iszero(P2m * P2)
         end
     end
 
